@@ -39,6 +39,20 @@
 								<textarea class="form-control" id="mensagem"
 								name="mensagem"></textarea>
 							</div>
+							<div>
+								<fieldset>
+									<legend> Dados do Email para teste</legend>
+									<div class="form-group">
+										<label for="email-teste"></label>
+											<input type="text" class="form-control" id="email-teste" name="email-teste">										
+									</div>
+									<div class="form-group">
+										<label for="senha-teste"></label>
+											<input type="password" class="form-control" id="senha-teste" name="senha-teste">										
+									</div>
+								</fieldset>
+							</div>
+						
 
 							<button type="submit" class="btn btn-primary btn-lg">Enviar Mensagem</button>
 						</form>
