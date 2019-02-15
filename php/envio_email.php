@@ -19,6 +19,7 @@
 		private $mensagem = null;
 		private $senhaTeste = null;
 		private $emailTeste = null;
+		public $status =  array('status_codigo' => null , 'status_messagem' => '' );
 		
 		 public function __set($atrr, $value)
 		{
@@ -52,7 +53,8 @@
 
 	if(!$novoEmail->EmailValidao()){
 		echo "Email Inválido";
-		die();
+		header('Location: index.php');
+	
 	}
 
 
@@ -61,7 +63,7 @@
 	$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 try {
     //Server settings
-    $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+    $mail->SMTPDebug = false;                                 // Enable verbose debug output
     $mail->isSMTP();                                      // Set mailer to use SMTP
     $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -89,7 +91,59 @@ try {
     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
-    echo 'Mensagem foi enviado';
+   	$novoEmail->status['status_codigo'] = 1;
+   	$novoEmail->status['status_messagem'] = 'Email enviado com sucesso';
 } catch (Exception $e) {
-    echo 'Não foi possível enviar este email. Detalhes do erro: ', $mail->ErrorInfo;
+    $novoEmail->status['status_codigo'] = 2;
+   	$novoEmail->status['status_messagem'] = 'Erro'. $mail->ErrorInfo;
 }
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+    	<title>App Mail Send</title>
+
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	</head>
+
+	<body>
+
+		<div class="container">  
+
+			<div class="py-3 text-center">
+				
+				<h2>Correio Veloz</h2>
+				<p class="lead">Seu app de envio de e-mais na velocidade da luz!</p>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<?php 
+						if ($novoEmail->status['status_codigo'] == 1) { 
+					?>
+							<div class="container">
+								<h1 class="display-4 text-sucess">Sucesso</h1>
+								<p><?=$novoEmail->status['status_messagem']?></p>
+								<a href="index.php" class="btn btn-primary btn-lg role="button" ">Voltar</a>
+							</div>						
+					<?php } ?>
+
+					<?php 
+						if ($novoEmail->status['status_codigo'] == 2) { 
+					?>
+							<div class="container">
+								<h1 class="display-4 text-danger">Ops!</h1>
+								<p><?=$novoEmail->status['status_messagem']?></p>
+								<a href="index.php" class="btn btn-primary btn-lg role="button" ></a>
+							</div>						
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+
+	</body>
